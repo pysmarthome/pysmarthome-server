@@ -11,6 +11,7 @@ setup(
         'flask',
         'pysmarthome~=2.0',
         's3db',
+        'watchdog',
     ],
     packages=find_packages(),
     scripts=['pysmarthome-server.wsgi'],
