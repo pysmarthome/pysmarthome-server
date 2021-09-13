@@ -4,6 +4,12 @@ from .utils import trigger_action, plugin_to_dict
 mutation = MutationType()
 
 
+@mutation.field('install_plugins')
+def install_plugins(_, info, names=[]):
+    g = info.context['g']
+    pm = g.plugin_manager
+    pm.install(*names)
+    return [plugin_to_dict(p) for p in pm.sync_plugins_with_db()]
 
 @mutation.field('toggle')
 def toggle(_, info, id):
