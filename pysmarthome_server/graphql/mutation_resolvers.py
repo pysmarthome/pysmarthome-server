@@ -1,15 +1,8 @@
 from ariadne import MutationType
-
+from .utils import trigger_action, plugin_to_dict
 
 mutation = MutationType()
 
-def trigger_action(ctrl, action, *args):
-    ctrl.trigger_action(action, *args)
-    state = ctrl.state
-    return {
-        **state.to_dict(),
-        'typename': state.graphql_name,
-    }
 
 
 @mutation.field('toggle')
