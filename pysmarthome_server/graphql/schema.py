@@ -8,6 +8,13 @@ type_defs = '''
         id: ID!
         power: String!
     }
+type_names = {
+    'base_state': 'BaseState',
+    'device_state': 'DeviceState',
+    'device': 'Device',
+    'plugin': 'Plugin',
+    'device_info': 'DevicesInfo',
+}
 
     interface Device {
         id: ID!
@@ -48,13 +55,14 @@ type_defs = '''
 '''
 
 
-def get_types(cls, names=[]):
+def get_types(cls):
     name = cls.graphql_name
     result = ''
+    names = list(type_names.values())
     if name in names: return ''
-    names.append(name)
+    type_names[cls.collection] = name
     for child_cls in cls.children_model_classes.values():
-        result += get_types(child_cls['class'], names)
+        result += get_types(child_cls['class'])
     parent_names = [parent.__name__ for parent in cls.__mro__]
     interface = ''
     if 'DeviceStatesModel' in parent_names:
