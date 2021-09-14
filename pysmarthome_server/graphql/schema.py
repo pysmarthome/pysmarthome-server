@@ -3,11 +3,6 @@ from .query_resolvers import query
 from .mutation_resolvers import mutation
 from .type_resolvers import device, state
 
-type_defs = '''
-    interface BaseState {
-        id: ID!
-        power: String!
-    }
 type_names = {
     'base_state': 'BaseState',
     'device_state': 'DeviceState',
@@ -16,42 +11,66 @@ type_names = {
     'device_info': 'DevicesInfo',
 }
 
-    interface Device {
-        id: ID!
-        name: String!
-        state: BaseState!
-    }
+state_fields = '''
+    id: ID!
+    power: String!
+'''
 
-    type Plugin {
+device_fields = '''
+    id: ID!
+    name: String!
+    addr: String
+    power_by_ping: Boolean
+'''
+
+device_interface_fields = f'''
+    {device_fields}
+    state: {type_names['base_state']}!
+'''
+
+type_defs = f'''
+    interface {type_names['base_state']} {{
+        {state_fields}
+    }}
+
+    interface {type_names['device']} {{
+        {device_interface_fields}
+    }}
+
+    type {type_names['device_state']} implements {type_names['base_state']} {{
+        {state_fields}
+    }}
+
+    type {type_names['plugin']} {{
         id: ID!
         version: String
         description: String
         module_name: String!
-        devices: [Device]
-    }
+        devices: [{type_names['device']}]
+    }}
 
-    type DevicesInfo {
+    type {type_names['device_info']} {{
         type: String!
         ids: [ID]!
         fields: [String]
-    }
+    }}
 
-    type Query {
-        plugins: [Plugin!]!
-        plugin(id: ID!): Plugin!
-        devices(type: String, power: String): [Device]!
-        device(id: ID!): Device!
-        devices_info: [DevicesInfo]
-    }
+    type Query {{
+        plugins: [{type_names['plugin']}!]!
+        plugin(id: ID!): {type_names['plugin']}!
+        devices(type: String, power: String): [{type_names['device']}]!
+        device(id: ID!): {type_names['device']}!
+        devices_info: [{type_names['device_info']}]
+    }}
 
-    type Mutation {
-        install_plugins(names: [String!]!): [Plugin]!
-        uninstall_plugins(ids: [ID!]!): [Plugin]!
-        toggle(id: ID!): BaseState!
-        poweroff(id: ID!): BaseState!
-        poweron(id: ID!): BaseState!
-        device_action(id: ID!, action: String!, args: [String]): BaseState!
-    }
+    type Mutation {{
+        install_plugins(names: [String!]!): [{type_names['plugin']}]!
+        uninstall_plugins(ids: [ID!]!): [{type_names['plugin']}]!
+        toggle(id: ID!): {type_names['base_state']}!
+        poweroff(id: ID!): {type_names['base_state']}!
+        poweron(id: ID!): {type_names['base_state']}!
+        device_action(id: ID!, action: String!, args: [String]): {type_names['base_state']}!
+    }}
 '''
 
 
