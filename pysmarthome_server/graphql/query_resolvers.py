@@ -16,6 +16,11 @@ def resolve_plugins(_, info):
     return [plugin_to_dict(p) for p in g.plugin_manager.plugins.values()]
 
 
+@query.field('search_plugins')
+def resolve_search_plugins(_, info, query=''):
+    return info.context['g'].plugin_manager.search(query)
+
+
 @query.field('device')
 def resolve_device(_, info, id):
     g = info.context['g']
