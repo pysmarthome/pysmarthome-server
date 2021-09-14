@@ -9,7 +9,7 @@ setup(
     install_requires=[
         'ariadne',
         'flask',
-        'pysmarthome~=2.0',
+        'pysmarthome~=3.0',
         's3db',
         'watchdog',
     ],
