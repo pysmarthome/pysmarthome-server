@@ -18,6 +18,7 @@ type_names = {
     'color': 'Color',
     'command': 'Command',
     'color_command': 'ColorCommand',
+    'plugin_info': 'PluginInfo',
     'plugin': 'Plugin',
     'device_info': 'DevicesInfo',
 }
@@ -133,6 +134,12 @@ type_defs = f'''
         command_id: ID!
     }}
 
+    type {type_names['plugin_info']} {{
+        version: String
+        description: String
+        module_name: String!
+    }}
+
     type {type_names['plugin']} {{
         id: ID!
         version: String
@@ -150,6 +157,7 @@ type_defs = f'''
     type Query {{
         plugins: [{type_names['plugin']}!]!
         plugin(id: ID!): {type_names['plugin']}!
+        search_plugins(query: String): [{type_names['plugin_info']}]
         devices(type: String, power: String): [{type_names['device']}]!
         device(id: ID!): {type_names['device']}!
         devices_info: [{type_names['device_info']}]
