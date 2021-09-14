@@ -11,6 +11,14 @@ def install_plugins(_, info, names=[]):
     pm.install(*names)
     return [plugin_to_dict(p) for p in pm.sync_plugins_with_db()]
 
+
+@mutation.field('uninstall_plugins')
+def uninstall_plugins(_, info, ids=[]):
+    pm = info.context['g'].plugin_manager
+    pm.uninstall(*ids)
+    return [plugin_to_dict(p) for p in pm.sync_plugins_with_db()]
+
+
 @mutation.field('toggle')
 def toggle(_, info, id):
     g = info.context['g']
