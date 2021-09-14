@@ -39,6 +39,7 @@ type_defs = '''
 
     type Mutation {
         install_plugins(names: [String!]!): [Plugin]!
+        uninstall_plugins(ids: [ID!]!): [Plugin]!
         toggle(id: ID!): BaseState!
         poweroff(id: ID!): BaseState!
         poweron(id: ID!): BaseState!
