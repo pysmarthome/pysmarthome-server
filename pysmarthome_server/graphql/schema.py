@@ -6,7 +6,18 @@ from .type_resolvers import device, state
 type_names = {
     'base_state': 'BaseState',
     'device_state': 'DeviceState',
+    'rgb_lamp_state': 'RgbLampState',
+    'tv_state': 'TvState',
+    'ac_state': 'AcState',
     'device': 'Device',
+    'multi_command_device': 'MultiCommandDevice',
+    'multi_command_rgb_lamp': 'MultiCommandRgbLamp',
+    'rgb_lamp': 'RgbLamp',
+    'tv': 'Tv',
+    'ac': 'Ac',
+    'color': 'Color',
+    'command': 'Command',
+    'color_command': 'ColorCommand',
     'plugin': 'Plugin',
     'device_info': 'DevicesInfo',
 }
@@ -28,6 +39,21 @@ device_interface_fields = f'''
     state: {type_names['base_state']}!
 '''
 
+rgb_lamp_interface_fields = f'''
+    {device_fields}
+    state: {type_names['rgb_lamp_state']}!
+'''
+
+multi_command_device_fields = f'''
+    commands: [{type_names['command']}]
+'''
+
+multi_command_rgb_lamp_fields = f'''
+    brightness_min: Int
+    brightness_max: Int
+    color_commands: [{type_names['color_command']}]
+'''
+
 type_defs = f'''
     interface {type_names['base_state']} {{
         {state_fields}
@@ -37,8 +63,74 @@ type_defs = f'''
         {device_interface_fields}
     }}
 
+    interface {type_names['multi_command_device']} {{
+        {device_interface_fields}
+        {multi_command_device_fields}
+    }}
+
+    interface {type_names['multi_command_rgb_lamp']} {{
+        {rgb_lamp_interface_fields}
+        {multi_command_device_fields}
+        {multi_command_rgb_lamp_fields}
+    }}
+
+    interface {type_names['rgb_lamp']} {{
+        {rgb_lamp_interface_fields}
+    }}
+
+    interface {type_names['tv']} {{
+        {device_fields}
+        state: {type_names['tv_state']}!
+        volume_min: Int
+        volume_max: Int
+    }}
+
+    interface {type_names['ac']} {{
+        {device_fields}
+        state: {type_names['ac_state']}!
+        temp_min: Int
+        temp_max: Int
+    }}
+
     type {type_names['device_state']} implements {type_names['base_state']} {{
         {state_fields}
+    }}
+
+    type {type_names['rgb_lamp_state']} implements {type_names['base_state']} {{
+        {state_fields}
+        color: String!
+        brightness: Float
+    }}
+
+    type {type_names['ac_state']} implements {type_names['base_state']} {{
+        {state_fields}
+        temp: Int
+    }}
+
+    type {type_names['tv_state']} implements {type_names['base_state']} {{
+        {state_fields}
+        volume: Int
+        mute: Boolean
+    }}
+
+    type {type_names['color']} {{
+        id: ID!
+        name: String!
+        label: String!
+        rgb: [Int]
+    }}
+
+    type {type_names['command']} {{
+        id: ID!
+        name: String
+        label: String
+        data: String!
+    }}
+
+    type {type_names['color_command']} {{
+        id: ID!
+        color_id: ID!
+        command_id: ID!
     }}
 
     type {type_names['plugin']} {{
@@ -84,10 +176,24 @@ def get_types(cls):
         result += get_types(child_cls['class'])
     parent_names = [parent.__name__ for parent in cls.__mro__]
     interface = ''
+    if 'DevicesModel' in parent_names:
+        interface = type_names['device']
+    if 'AcsModel' in parent_names:
+        interface += ' & ' + type_names['ac']
+    elif 'TvsModel' in parent_names:
+        interface += ' & ' + type_names['tv']
+    elif 'RgbLampsModel' in parent_names:
+        interface += ' & ' + type_names['rgb_lamp']
+    if 'MultiCommandDevicesModel' in parent_names:
+        interface += ' & ' + type_names['multi_command_device']
     if 'DeviceStatesModel' in parent_names:
-        interface = 'BaseState'
-    elif 'DevicesModel' in parent_names:
-        interface = 'Device'
+        interface = type_names['device_state']
+    elif 'RgbState' in parent_names:
+        interface += ' & ' + type_names['rgb_lamp_state']
+    elif 'TvStateModel' in parent_names:
+        interface += ' & ' + type_names['tv_state']
+    elif 'AcStateModel' in parent_names:
+        interface += ' & ' + type_names['ac_state']
     return result + cls.to_graphql_type(interface)
 
 
