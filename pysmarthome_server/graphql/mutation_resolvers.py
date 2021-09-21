@@ -64,3 +64,15 @@ def device_update(_, info, id, fields='', state=''):
     if state:
         ctrl.state.update(**json.loads(state))
     return dev_ctrl_to_dict(ctrl)
+
+
+@mutation.field('restore_device_state')
+def restore_device_state(_, info, id, state_id):
+    pm = info.context['g'].plugin_manager
+    ctrl = pm.get_controllers()[id]
+    ctrl.restore_snapshot_state(state_id)
+    state = ctrl.state
+    return {
+        **state.to_dict(),
+        'typename': state.graphql_name,
+    }
