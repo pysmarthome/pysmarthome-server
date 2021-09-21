@@ -26,6 +26,7 @@ type_names = {
     'plugin_info': 'PluginInfo',
     'plugin': 'Plugin',
     'device_info': 'DevicesInfo',
+    'scene': 'Scene',
 }
 
 state_fields = '''
@@ -190,6 +191,13 @@ type_defs = f'''
         type: String!
         ids: [ID]!
         fields: [String]
+    }}
+
+    type {type_names['scene']} {{
+        id: ID!
+        name: String!
+        snapshot_state_ids: [ID]!
+        devices: [{type_names['device']}]!
     }}
 
     type Query {{
