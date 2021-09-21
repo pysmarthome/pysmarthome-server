@@ -1,6 +1,8 @@
 from ariadne import MutationType
 from .utils import trigger_action, plugin_to_dict, dev_ctrl_to_dict
+from pysmarthome import ScenesModel
 import json
+import asyncio
 
 mutation = MutationType()
 
@@ -76,3 +78,23 @@ def restore_device_state(_, info, id, state_id):
         **state.to_dict(),
         'typename': state.graphql_name,
     }
+
+
+@mutation.field('activate_scene')
+def activate_scene(_, info, id):
+    db = info.context['db']
+    ctrls = info.context['g'].plugin_manager.get_controllers()
+    sceneModel = ScenesModel.load(db, id)
+    tasks = []
+    selected_ctrls = []
+    for i, id in enumerate(sceneModel.device_ids):
+        if id not in ctrls: continue
+        ctrl = ctrls[id]
+        selected_ctrls.append(ctrl)
+        func = ctrl.restore_snapshot_state
+        snapshot_id = sceneModel.snapshot_state_ids[i]
+        tasks.append(asyncio.to_thread(func, snapshot_id))
+    asyncio.set_event_loop(asyncio.SelectorEventLoop())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.gather(*tasks))
+    return [dev_ctrl_to_dict(ctrl) for ctrl in selected_ctrls]

@@ -222,6 +222,7 @@ type_defs = f'''
         device_action(id: ID!, action: String!, args: [String]): {type_names['base_state']}!
         device_update(id: ID!, fields: String, state: String): {type_names['device']}!
         restore_device_state(id: ID!, state_id: ID!): {type_names['base_state']}!
+        activate_scene(id: ID!): [{type_names['device']}]
     }}
 '''
 

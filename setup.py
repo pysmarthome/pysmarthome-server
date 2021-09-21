@@ -8,6 +8,7 @@ setup(
     author_email='filipe.alvesdefernando@gmail.com',
     install_requires=[
         'ariadne',
+        'asyncio',
         'flask',
         'pysmarthome>=3.1.0',
         's3db',
