@@ -145,6 +145,7 @@ type_defs = f'''
         id: ID!
         version: String
         description: String
+        active: Boolean!
         module_name: String!
         devices: [{type_names['device']}]
     }}
