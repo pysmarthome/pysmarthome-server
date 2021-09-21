@@ -131,8 +131,8 @@ type_defs = f'''
 
     type {type_names['color_command']} {{
         id: ID!
-        color_id: ID!
-        command_id: ID!
+        color: {type_names['color']}
+        command: {type_names['command']}
     }}
 
     type {type_names['plugin_info']} {{
