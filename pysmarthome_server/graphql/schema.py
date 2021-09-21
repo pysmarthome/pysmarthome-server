@@ -171,6 +171,7 @@ type_defs = f'''
     type Mutation {{
         install_plugins(names: [String!]!): [{type_names['plugin']}]!
         uninstall_plugins(ids: [ID!]!): [{type_names['plugin']}]!
+        toggle_active_plugins(ids: [ID!]!): [{type_names['plugin']}]!
         toggle(id: ID!): {type_names['base_state']}!
         poweroff(id: ID!): {type_names['base_state']}!
         poweron(id: ID!): {type_names['base_state']}!
