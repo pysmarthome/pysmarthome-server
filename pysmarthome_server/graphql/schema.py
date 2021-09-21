@@ -174,6 +174,7 @@ type_defs = f'''
         poweroff(id: ID!): {type_names['base_state']}!
         poweron(id: ID!): {type_names['base_state']}!
         device_action(id: ID!, action: String!, args: [String]): {type_names['base_state']}!
+        device_update(id: ID!, fields: String, state: String): {type_names['device']}!
     }}
 '''
 

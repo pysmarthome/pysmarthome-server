@@ -1,5 +1,6 @@
 from ariadne import MutationType
-from .utils import trigger_action, plugin_to_dict
+from .utils import trigger_action, plugin_to_dict, dev_ctrl_to_dict
+import json
 
 mutation = MutationType()
 
@@ -45,3 +46,14 @@ def device_action(_, info, id, action, args=[]):
     g = info.context['g']
     ctrl = g.plugin_manager.get_controllers()[id]
     return trigger_action(ctrl, action, *args)
+
+
+@mutation.field('device_update')
+def device_update(_, info, id, fields='', state=''):
+    pm = info.context['g'].plugin_manager
+    ctrl = pm.get_controllers()[id]
+    if fields:
+        ctrl.update(**json.loads(fields))
+    if state:
+        ctrl.state.update(**json.loads(state))
+    return dev_ctrl_to_dict(ctrl)
