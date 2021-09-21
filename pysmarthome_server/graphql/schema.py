@@ -13,6 +13,11 @@ type_names = {
     'multi_command_device': 'MultiCommandDevice',
     'multi_command_rgb_lamp': 'MultiCommandRgbLamp',
     'rgb_lamp': 'RgbLamp',
+    'snapshot_base_state': 'SnapshotBaseState',
+    'snapshot_state': 'SnapshotState',
+    'snapshot_tv_state': 'SnapshotTvState',
+    'snapshot_ac_state': 'SnapshotAcState',
+    'snapshot_rgb_lamp_state': 'SnapshotRgbLampState',
     'tv': 'Tv',
     'ac': 'Ac',
     'color': 'Color',
@@ -28,6 +33,11 @@ state_fields = '''
     power: String!
 '''
 
+snapshot_state_fields = '''
+    id: ID!
+    power: String
+'''
+
 device_fields = '''
     id: ID!
     name: String!
@@ -37,6 +47,7 @@ device_fields = '''
 
 device_interface_fields = f'''
     {device_fields}
+    snapshot_states: [{type_names['snapshot_base_state']}]!
     state: {type_names['base_state']}!
 '''
 
@@ -58,6 +69,10 @@ multi_command_rgb_lamp_fields = f'''
 type_defs = f'''
     interface {type_names['base_state']} {{
         {state_fields}
+    }}
+
+    interface {type_names['snapshot_base_state']} {{
+        {snapshot_state_fields}
     }}
 
     interface {type_names['device']} {{
@@ -97,9 +112,19 @@ type_defs = f'''
         {state_fields}
     }}
 
+    type {type_names['snapshot_state']} implements {type_names['snapshot_base_state']} {{
+        {snapshot_state_fields}
+    }}
+
     type {type_names['rgb_lamp_state']} implements {type_names['base_state']} {{
         {state_fields}
         color: String!
+        brightness: Float
+    }}
+
+    type {type_names['snapshot_rgb_lamp_state']} implements {type_names['snapshot_base_state']} {{
+        {snapshot_state_fields}
+        color: String
         brightness: Float
     }}
 
@@ -108,8 +133,19 @@ type_defs = f'''
         temp: Int
     }}
 
+    type {type_names['snapshot_ac_state']} implements {type_names['snapshot_base_state']} {{
+        {snapshot_state_fields}
+        temp: Int
+    }}
+
     type {type_names['tv_state']} implements {type_names['base_state']} {{
         {state_fields}
+        volume: Int
+        mute: Boolean
+    }}
+
+    type {type_names['snapshot_tv_state']} implements {type_names['snapshot_base_state']} {{
+        {snapshot_state_fields}
         volume: Int
         mute: Boolean
     }}
