@@ -161,6 +161,7 @@ type_defs = f'''
         devices(type: String, power: String): [{type_names['device']}]!
         device(id: ID!): {type_names['device']}!
         devices_info: [{type_names['device_info']}]
+        commands: [{type_names['command']}]!
     }}
 
     type Mutation {{

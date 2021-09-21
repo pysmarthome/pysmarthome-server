@@ -1,5 +1,6 @@
 from ariadne import QueryType
 from .utils import plugin_to_dict, dev_ctrl_to_dict
+from pysmarthome.models import CommandsModel
 
 query = QueryType()
 
@@ -52,3 +53,10 @@ def resolve_devices_info(_, info):
         infos[name]['ids'].append(ctrl.id)
     return [{ 'type': k, 'ids': v['ids'], 'fields': v['fields'] }
         for k, v in infos.items()]
+
+
+@query.field('commands')
+def resolve_colors(_, info):
+    db = info.context['db']
+    commands = CommandsModel.load_all(db)
+    return [c.to_dict() for c in commands]

@@ -31,6 +31,7 @@ def start_server(**config):
             context_value={
                 'request': request,
                 'g': g,
+                'db': conn,
             },
             debug=True
         )
