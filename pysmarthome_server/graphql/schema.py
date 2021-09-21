@@ -162,6 +162,7 @@ type_defs = f'''
         device(id: ID!): {type_names['device']}!
         devices_info: [{type_names['device_info']}]
         commands: [{type_names['command']}]!
+        colors: [{type_names['color']}]!
     }}
 
     type Mutation {{
