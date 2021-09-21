@@ -1,6 +1,6 @@
 from ariadne import QueryType
 from .utils import plugin_to_dict, dev_ctrl_to_dict
-from pysmarthome.models import CommandsModel, ColorsModel
+from pysmarthome.models import CommandsModel, ColorsModel, ColorCommandsModel
 
 query = QueryType()
 
@@ -67,3 +67,10 @@ def resolve_colors(_, info):
     db = info.context['db']
     colors = ColorsModel.load_all(db)
     return [c.to_dict() for c in colors]
+
+
+@query.field('color_commands')
+def resolve_color_commands(_, info):
+    db = info.context['db']
+    color_commands = ColorCommandsModel.load_all(db)
+    return [c.to_dict() for c in color_commands]

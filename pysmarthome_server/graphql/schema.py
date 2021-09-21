@@ -164,6 +164,7 @@ type_defs = f'''
         devices_info: [{type_names['device_info']}]
         commands: [{type_names['command']}]!
         colors: [{type_names['color']}]!
+        color_commands: [{type_names['color_command']}]!
     }}
 
     type Mutation {{
