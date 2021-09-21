@@ -119,6 +119,7 @@ type_defs = f'''
         name: String!
         label: String!
         rgb: [Int]
+        hex: String
     }}
 
     type {type_names['command']} {{
