@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='pysmarthome-server',
     description='A simple yet powerful python http server to integrate smart devices',
-    version='0.2.0',
+    version='0.3.0',
     author='Filipe Alves',
     author_email='filipe.alvesdefernando@gmail.com',
     install_requires=[

@@ -10,6 +10,7 @@ type_names = {
     'tv_state': 'TvState',
     'ac_state': 'AcState',
     'device': 'Device',
+    'pingable_device': 'PingableDevice',
     'multi_command_device': 'MultiCommandDevice',
     'multi_command_rgb_lamp': 'MultiCommandRgbLamp',
     'rgb_lamp': 'RgbLamp',
@@ -42,6 +43,9 @@ snapshot_state_fields = '''
 device_fields = '''
     id: ID!
     name: String!
+'''
+
+pingable_device_fields = '''
     addr: String
     power_by_ping: Boolean
 '''
@@ -97,6 +101,7 @@ type_defs = f'''
 
     interface {type_names['tv']} {{
         {device_fields}
+        {pingable_device_fields}
         state: {type_names['tv_state']}!
         volume_min: Int
         volume_max: Int
