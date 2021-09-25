@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:80"
+    volumes:
+      - pysmarthome-packages:/usr/local/lib/python3.9/site-packages
+volumes:
+  pysmarthome-packages:

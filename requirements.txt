@@ -1,0 +1,5 @@
+ariadne
+asyncio
+flask
+pysmarthome>=3.1.0
+s3db
